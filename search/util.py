@@ -121,6 +121,7 @@ class Stack:
     "A container with a last-in-first-out (LIFO) queuing policy."
     def __init__(self):
         self.list = []
+        print 'Init stack'
 
     def push(self,item):
         "Push 'item' onto the stack"

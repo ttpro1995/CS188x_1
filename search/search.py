@@ -72,7 +72,7 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def depthFirstSearch(problem):
+def depthFirstSearch(problem):# not working yet
     """
     Search the deepest nodes in the search tree first.
 
@@ -87,12 +87,96 @@ def depthFirstSearch(problem):
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
+    #start = problem.getStartState()
+    #print 'start ', start
+   # start_succ = problem.getSuccessors(start)
+   # print  'start succ', start_succ
+    #b = start_succ[0]
+    #print  'b ',b
+   # print 'b position ' ,b[0]
+   # b = b[0]
+    #b_succ = problem.getSuccessors(b)
+   # print 'b succ ',b_succ
+    #c = b_succ[0]
+    #print 'c ',c
+    
+    "*** My code here ***"
+    
+   # procedure DFS-iterative(G,v):
+   #   let S be a stack
+    #  S.push(v)
+     # while S is not empty
+      #      v = S.pop()
+       #     if v is not labeled as discovered:
+        #        label v as discovered
+         #       for all edges from v to w in G.adjacentEdges(v) do
+          #          S.push(w)
+    v = problem.getStartState()      
+    S = util.Stack()
+    v = (v,'start',0);
+    S.push(v)
+    while (S.isEmpty()==False):
+        v = S.pop()
+        print v
+        if (problem.isGoalState(v[0])):
+            print 'GOAL'
+            return 0
+        v_succ= problem.getSuccessors(v[0])
+        for edge in v_succ:
+            S.push(edge)
+    
+    
     util.raiseNotDefined()
 
-def breadthFirstSearch(problem):
+def breadthFirstSearch(problem):#done
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    m_counter = 0
+    visited = []
+    v = problem.getStartState()      
+    S = util.Queue()
+    v = (v,'start',0)
+    v = [v] # make it an array
+    S.push(v)
+    while (S.isEmpty()==False):
+        v = S.pop()
+        #print v 
+        m_counter = m_counter +1
+        print m_counter
+        cur_state = v[-1]
+        visited.append(cur_state) # mark already visited state
+        cur_position = cur_state[0]
+        #print cur_position
+        if (problem.isGoalState(cur_position)):
+            break 
+        v_succ= problem.getSuccessors(cur_position)
+        for edge in v_succ:
+            if edge in v:
+                continue # avoid loop  
+            if edge in visited:
+                continue # not expand state already visit
+            tmp_arr = list(v)  # a tmp array clone from v
+            tmp_arr.append(edge) # push edge into array
+            edge = tmp_arr # new plan (the path + new edge)
+            S.push(edge)    
+            
+    
+    from game import Directions
+    
+    result = []
+    for state in v:
+        directon = state[1]
+        if (directon=='South'):
+            result.append(Directions.SOUTH)
+        if (directon=='West'):
+            result.append(Directions.WEST)
+        if (directon=='East'):
+            result.append(Directions.EAST)
+        if (directon=='North'):
+            result.append(Directions.NORTH)     
+    #print 'result = ',result
+    return result         
+    #util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
