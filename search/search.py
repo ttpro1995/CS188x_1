@@ -125,12 +125,14 @@ def depthFirstSearch(problem):# not working yet
         m_counter = m_counter +1
         #print m_counter
         cur_state = v[-1]
-        visited.append(cur_state) # mark already visited state
         cur_position = cur_state[0]
         #print cur_position
         if (problem.isGoalState(cur_position)):
             break 
-        v_succ= problem.getSuccessors(cur_position)
+        if (cur_position in visited):
+            continue # skip node already expanded
+        v_succ= problem.getSuccessors(cur_position) #expanded a node
+        visited.append(cur_position)
         for edge in v_succ:
             if edge in v:
                 continue # avoid loop  
@@ -144,18 +146,10 @@ def depthFirstSearch(problem):# not working yet
     from game import Directions
             
     result = []
+    del v[0] # start dummy
     for state in v:
         directon = state[1]
-        if (directon=='South'):
-            result.append(Directions.SOUTH)
-        if (directon=='West'):
-            result.append(Directions.WEST)
-        if (directon=='East'):
-            result.append(Directions.EAST)
-        if (directon=='North'):
-            result.append(Directions.NORTH)     
-            #print 'result = ',result
-    print 'result ',result
+        result.append(directon)
     return result                     
     
     #util.raiseNotDefined()
@@ -197,18 +191,8 @@ def breadthFirstSearch(problem):#done
     result = []
     for state in v:
         directon = state[1]
-        result.append(directon) 
-        #if (directon=='South'):
-        #    result.append(Directions.SOUTH)
-        #if (directon=='West'):
-        #    result.append(Directions.WEST)
-        #if (directon=='East'):
-        #    result.append(Directions.EAST)
-        #if (directon=='North'):
-        #    result.append(Directions.NORTH)     
-    #print 'result = ',result
+        result.append(directon)
     return result         
-    #util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
