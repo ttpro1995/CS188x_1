@@ -111,22 +111,53 @@ def depthFirstSearch(problem):# not working yet
         #        label v as discovered
          #       for all edges from v to w in G.adjacentEdges(v) do
           #          S.push(w)
+    
+    m_counter = 0
+    visited = []
     v = problem.getStartState()      
     S = util.Stack()
-    v = (v,'start',0);
+    v = (v,'start',0)
+    v = [v] # make it an array
     S.push(v)
     while (S.isEmpty()==False):
         v = S.pop()
-        print v
-        if (problem.isGoalState(v[0])):
-            print 'GOAL'
-            return 0
-        v_succ= problem.getSuccessors(v[0])
+        #print v 
+        m_counter = m_counter +1
+        print m_counter
+        cur_state = v[-1]
+        visited.append(cur_state) # mark already visited state
+        cur_position = cur_state[0]
+        #print cur_position
+        if (problem.isGoalState(cur_position)):
+            break 
+        v_succ= problem.getSuccessors(cur_position)
         for edge in v_succ:
-            S.push(edge)
+            if edge in v:
+                continue # avoid loop  
+            if edge in visited:
+                continue # not expand state already visit
+            tmp_arr = list(v)  # a tmp array clone from v
+            tmp_arr.append(edge) # push edge into array
+            edge = tmp_arr # new plan (the path + new edge)
+            S.push(edge)    
+        
+    from game import Directions
+            
+    result = []
+    for state in v:
+        directon = state[1]
+        if (directon=='South'):
+            result.append(Directions.SOUTH)
+        if (directon=='West'):
+            result.append(Directions.WEST)
+        if (directon=='East'):
+            result.append(Directions.EAST)
+        if (directon=='North'):
+            result.append(Directions.NORTH)     
+            #print 'result = ',result
+    return result                     
     
-    
-    util.raiseNotDefined()
+    #util.raiseNotDefined()
 
 def breadthFirstSearch(problem):#done
     """Search the shallowest nodes in the search tree first."""
