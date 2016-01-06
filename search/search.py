@@ -123,7 +123,7 @@ def depthFirstSearch(problem):# not working yet
         v = S.pop()
         #print v 
         m_counter = m_counter +1
-        print m_counter
+        #print m_counter
         cur_state = v[-1]
         visited.append(cur_state) # mark already visited state
         cur_position = cur_state[0]
@@ -155,6 +155,7 @@ def depthFirstSearch(problem):# not working yet
         if (directon=='North'):
             result.append(Directions.NORTH)     
             #print 'result = ',result
+    print 'result ',result
     return result                     
     
     #util.raiseNotDefined()
@@ -173,19 +174,17 @@ def breadthFirstSearch(problem):#done
         v = S.pop()
         #print v 
         m_counter = m_counter +1
-        print m_counter
+        #print m_counter
         cur_state = v[-1]
-        visited.append(cur_state) # mark already visited state
         cur_position = cur_state[0]
         #print cur_position
         if (problem.isGoalState(cur_position)):
-            break 
-        v_succ= problem.getSuccessors(cur_position)
-        for edge in v_succ:
-            if edge in v:
-                continue # avoid loop  
-            if edge in visited:
-                continue # not expand state already visit
+            break         
+        if cur_position in visited:
+            continue # skip if node already expanded
+        v_succ= problem.getSuccessors(cur_position)  # expand a node
+        visited.append(cur_position) # mark already visited (expanded) node        
+        for edge in v_succ: 
             tmp_arr = list(v)  # a tmp array clone from v
             tmp_arr.append(edge) # push edge into array
             edge = tmp_arr # new plan (the path + new edge)
@@ -194,17 +193,19 @@ def breadthFirstSearch(problem):#done
     
     from game import Directions
     
+    del v[0] # start dummy
     result = []
     for state in v:
         directon = state[1]
-        if (directon=='South'):
-            result.append(Directions.SOUTH)
-        if (directon=='West'):
-            result.append(Directions.WEST)
-        if (directon=='East'):
-            result.append(Directions.EAST)
-        if (directon=='North'):
-            result.append(Directions.NORTH)     
+        result.append(directon) 
+        #if (directon=='South'):
+        #    result.append(Directions.SOUTH)
+        #if (directon=='West'):
+        #    result.append(Directions.WEST)
+        #if (directon=='East'):
+        #    result.append(Directions.EAST)
+        #if (directon=='North'):
+        #    result.append(Directions.NORTH)     
     #print 'result = ',result
     return result         
     #util.raiseNotDefined()
