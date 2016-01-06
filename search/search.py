@@ -197,7 +197,47 @@ def breadthFirstSearch(problem):#done
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    m_counter = 0
+    visited = []
+    v = problem.getStartState()      
+    S = util.PriorityQueue()
+    v = (v,'start',0)
+    v = [v] # make it an array
+    S.push(v,0)
+    while (S.isEmpty()==False):
+        v = S.pop()
+        #print v 
+        m_counter = m_counter +1
+        #print m_counter
+        cur_state = v[-1]
+        cur_position = cur_state[0]
+        #print cur_position
+        if (problem.isGoalState(cur_position)):
+            break         
+        if cur_position in visited:
+            continue # skip if node already expanded
+        v_succ= problem.getSuccessors(cur_position)  # expand a node
+        visited.append(cur_position) # mark already visited (expanded) node        
+        for edge in v_succ: 
+            new_cost = edge[2] # the cost to new node
+            cur_cost = (v[-1])[2] # old cost so far, write at index 2 in last tuple of array
+            sum_cost = cur_cost + new_cost
+            # create new state from edge with sum cost
+            new_edge = (edge[0],edge[1],sum_cost)
+            tmp_arr = list(v)  # a tmp array clone from v
+            tmp_arr.append(new_edge) # push edge into array
+            new_edge = tmp_arr # new plan (the path + new edge)
+            S.push(new_edge,sum_cost)    
+            
+    
+    from game import Directions
+    
+    del v[0] # start dummy
+    result = []
+    for state in v:
+        directon = state[1]
+        result.append(directon)
+    return result    
 
 def nullHeuristic(state, problem=None):
     """

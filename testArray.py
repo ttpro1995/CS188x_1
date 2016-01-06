@@ -26,3 +26,13 @@ while (i<5):
         print 'Current Letter :', letter
     print 'while loop ',i
     i = i +1
+
+a = ((1,2),3,4)
+b = ((5,6),7,8)
+arr = []
+arr.append(a)
+arr.append(b)
+print (arr[-1])[2]
+c = (a[0],a[1],12)
+print c
+    
