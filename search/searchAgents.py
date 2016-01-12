@@ -288,6 +288,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.startState = (self.startingPosition,1,1,1,1) # (position, foodcorner[0],foodcorner[1],foodcorner[2],foodcorner[3])
 
     def getStartState(self):
         """
@@ -295,14 +296,26 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.startState
+        
+        #util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        food0 = state[1];
+        food1 = state[2];
+        food2 = state[3];
+        food3 = state[4];
+        if (food0 ==0):
+            if (food1==0):
+                if (food2==0):
+                    if (food3==0):
+                        return True
+        else:
+            return False
 
     def getSuccessors(self, state):
         """
@@ -325,7 +338,29 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
-
+            x,y = state[0]
+            food0 = state[1];
+            food1 = state[2];
+            food2 = state[3];
+            food3 = state[4];            
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                nextPos = (nextx,nexty)
+                if (nextPos ==self.corners[0]):
+                    food0 = 0
+                if (nextPos ==self.corners[1]):
+                    food1 = 0
+                if (nextPos ==self.corners[2]):
+                    food2 = 0  
+                if (nextPos ==self.corners[3]):
+                    food3 = 0                    
+                nextState = (nextPos,food0,food1,food2,food3)
+                #cost = self.costFn(nextState)
+                cost = 1
+                successors.append( ( nextState, action, cost) )            
+            
+            
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
