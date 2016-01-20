@@ -72,7 +72,7 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
-def depthFirstSearch(problem):# not working yet
+def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
 
@@ -87,31 +87,7 @@ def depthFirstSearch(problem):# not working yet
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
     "*** YOUR CODE HERE ***"
-    #start = problem.getStartState()
-    #print 'start ', start
-   # start_succ = problem.getSuccessors(start)
-   # print  'start succ', start_succ
-    #b = start_succ[0]
-    #print  'b ',b
-   # print 'b position ' ,b[0]
-   # b = b[0]
-    #b_succ = problem.getSuccessors(b)
-   # print 'b succ ',b_succ
-    #c = b_succ[0]
-    #print 'c ',c
-    
-    "*** My code here ***"
-    
-   # procedure DFS-iterative(G,v):
-   #   let S be a stack
-    #  S.push(v)
-     # while S is not empty
-      #      v = S.pop()
-       #     if v is not labeled as discovered:
-        #        label v as discovered
-         #       for all edges from v to w in G.adjacentEdges(v) do
-          #          S.push(w)
-    
+   
     m_counter = 0
     visited = []
     v = problem.getStartState()      

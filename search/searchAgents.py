@@ -393,10 +393,44 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
+   
+    
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    cur_state = (state[0],state[1],state[2],state[3],state[4])
+    cost = 0
+    while (not (problem.isGoalState(cur_state))):
+        tmp = toNearestCorner(cur_state,corners)
+        cur_state = tmp[0]
+        cost = cost + tmp[1]
+    return cost    
+    
+ 
+    #return 0 # Default to trivial solution
 
+# find the way from current position to nearest corner have food
+def toNearestCorner(state,corners):
+    cur_pos = state[0]# current position
+    shortestCost = 9999
+    shortestCorner = 0 # index
+    for i in range(0,4):
+        xy1 = cur_pos
+        xy2 = corners[i]
+        cost = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1]) 
+        if (cost < shortestCost and state[i+1]==1):# nearest corner has food
+            shortestCost = cost
+            shortestCorner = i        
+    
+        
+    mfood =[0,0,0,0]
+    for i in range(0,4):
+        mfood[i] = state[i+1]
+    mfood[shortestCorner] = 0    
+        
+    newState = (corners[shortestCorner],mfood[0],mfood[1],mfood[2],mfood[3])
+    
+ 
+    return (newState,shortestCost)
+    
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
     def __init__(self):
@@ -489,7 +523,68 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    total_cost = 0
+
+    tmp_state = state
+    while not problem.isGoalState(tmp_state):
+        ret = cost_to_nearest_food_on_grid(tmp_state, problem.walls)
+        total_cost = total_cost+ret[1]
+        tmp_state = ret[0]
+    #action = search.breadthFirstSearch(problem)
+    #total_cost = len(action)
+    print('total cost ',total_cost)
+    return total_cost
+
+
+def count_wall(xy1,xy2, wallGird):
+    wall_c = 0
+    wallList = wallGird.asList()
+    for wall in wallList:
+        #if (wall[0] == xy1[0]) or (wall[0] == xy2[0]) or (wall[1] == xy1[1]) or (wall[1] == xy2[1]):
+         #  wall_c = wall_c + 1
+
+        # count a wall if it block both way
+        if wall[0] == xy1[0]:
+            for wall2 in wallList:
+                if wall2[0] == xy2[0]:
+                    wall_c += 1
+
+        if wall[1] == xy1[1]:
+            for wall2 in wallList:
+                if wall2[1] == xy2[1]:
+                    wall_c += 1
+    wall_c=wall_c
+    return wall_c
+
+
+def cost_to_nearest_food_on_grid(state,walls):#Heuristic failed admissibility test
+    position = state[0]
+    foodGird = state[1]
+
+    foodList = foodGird.asList()
+    shortest_cost = 9999
+    shortest_position = position
+
+    for pos in foodList:
+        cost = manhattan_heuristic(position,pos);
+        wall_c = count_wall(position,pos,walls)
+        cost = cost + wall_c
+        if cost < shortest_cost:
+            shortest_cost = cost
+            shortest_position = pos
+
+    newFoodGird = foodGird.deepCopy()
+    shortestX = shortest_position[0]
+    shortestY = shortest_position[1]
+    newFoodGird[shortestX][shortestY] = False # eat that food
+    newState = (shortest_position,newFoodGird)
+    ret = (newState,shortest_cost)
+    return ret
+
+
+def manhattan_heuristic(xy1,xy2):
+    cost = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+    return cost
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -520,7 +615,9 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.breadthFirstSearch(problem)
+
+       # util.raiseNotDefined()
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -556,7 +653,11 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        if self.food[x][y]==True:
+            return True
+        return False
+      #  util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
     """
